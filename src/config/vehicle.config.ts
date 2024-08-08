@@ -1,7 +1,7 @@
 import { Vec3, WheelInfoOptions } from "cannon-es";
 
 export const defaultWheelOptions: WheelInfoOptions = {
-  radius: 0.5, // радиус колеса
+  radius: 0.6, // радиус колеса
   directionLocal: new Vec3(0, -1, 0),
   suspensionStiffness: 50, // жесткость подвески (Определяет, насколько жестко подвеска колеса реагирует на удары и деформации. Более высокие значения делают подвеску жестче, что уменьшает её прогиб.)
   suspensionRestLength: 0.3, // клиренс
