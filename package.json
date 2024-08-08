@@ -1,5 +1,6 @@
 {
   "name": "free-drive",
+  "homepage": "https://azad-source.github.io/free-drive",
   "version": "0.1.0",
   "private": false,
   "type": "module",
