@@ -23,6 +23,6 @@ jobs:
       - name: connect and pull
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit"
       - name: build app
-        run: cd ${{ secrets.WORK_DIR }} && yarn install && yarn build
+        run: cd /var/www/free-drive && yarn install && yarn build
       - name: cleanup
         run: rm -rf ~/.ssh
