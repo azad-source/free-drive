@@ -21,18 +21,18 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
       - name: Deploy to server and build
-        uses: appleboy/ssh-action@v0.1.0
+        uses: easingthemes/ssh-deploy@main
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-rlgoDzvc -i --delete"
+          SOURCE: "dist/"
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.SSH_USER }}
+          TARGET: ${{ secrets.WORK_DIR }}
+          EXCLUDE: "/dist/, /node_modules/"
+          SCRIPT_AFTER: |
             cd ${{ secrets.WORK_DIR }}
             git checkout ${{ secrets.MAIN_BRANCH }}
             git pull
             yarn install
             yarn build
-
-      #   run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit"
-      # - name: cleanup
-      #   run: rm -rf ~/.ssh
