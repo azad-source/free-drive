@@ -1,7 +1,13 @@
 import WebSocket, { WebSocketServer } from "ws";
 import { IGameState } from "./models/user.models";
+require("dotenv").config();
 
-const server = new WebSocketServer({ port: 8080 });
+const PORT =
+  typeof process.env.WEB_SOCKET_PORT === "number"
+    ? process.env.WEB_SOCKET_PORT
+    : 8080;
+
+const server = new WebSocketServer({ port: PORT });
 
 const clients: Set<WebSocket> = new Set();
 
