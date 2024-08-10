@@ -53,7 +53,7 @@ jobs:
             git checkout ${{ secrets.MAIN_BRANCH }}
             git pull
             yarn install
-            yarn build-all
+            yarn build
             yarn start-all
         env:
           WEB_SOCKET_PORT: 80
