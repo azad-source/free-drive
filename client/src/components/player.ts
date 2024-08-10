@@ -4,7 +4,7 @@ import { Car } from "./car";
 export class Player {
   readonly id: string | null;
   readonly name: string | null;
-  car: Car;
+  car: Car | null;
 
   constructor() {
     this.name = sessionStorage.getItem(sessionFields.playerName);
@@ -17,5 +17,9 @@ export class Player {
 
   defineCar(car: Car) {
     this.car = car;
+  }
+
+  removeCar() {
+    this.car = null;
   }
 }

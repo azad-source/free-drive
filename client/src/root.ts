@@ -44,7 +44,11 @@ export class Root {
     this.initWorld();
     this.initWebSocket();
 
-    new EntryForm();
+    new EntryForm((userId: string) => {
+      if (this.player?.car) {
+        this.player.car.setState({ ...this.player.car.state, isRemoved: true });
+      }
+    });
     this.player = new Player();
 
     if (this.player.isExist()) {
@@ -54,7 +58,9 @@ export class Root {
   }
 
   initWebSocket() {
-    this.ws = new WebSocket("ws://localhost:8080");
+    const host = import.meta.env.VITE_WEB_SOCKET_HOST;
+
+    this.ws = new WebSocket(host);
 
     this.ws.onopen = () => {
       console.log("Connected to WebSocket server");
@@ -63,9 +69,14 @@ export class Root {
     this.ws.onmessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
       this.users = data;
+
+      const userIds = this.users.map((i) => i.id);
+      const carsIds = this.cars.map((i) => i.state.id);
+
       this.users.forEach((state) => {
         if (state.id) {
-          const carIndex = this.cars.findIndex((c) => c.state?.id === state.id);
+          const carIndex = carsIds.findIndex((c) => c === state.id);
+
           if (carIndex !== -1) {
             this.cars[carIndex].setState(state);
           } else {
@@ -74,7 +85,16 @@ export class Root {
           }
         }
       });
-      console.log("Received data:", data);
+
+      const removedCarIndex = this.cars.findIndex(
+        (c) => !userIds.includes(c.state.id)
+      );
+
+      if (removedCarIndex !== -1) {
+        const car = this.cars[removedCarIndex];
+        car.removeCar();
+        this.cars.splice(removedCarIndex, 1);
+      }
     };
 
     this.ws.onclose = () => {
@@ -101,7 +121,9 @@ export class Root {
   initPlayerCar() {
     if (this.player) {
       this.player.defineCar(new Car(this.scene, this.world));
-      new VehicleControls(this.player.car.vehicle);
+      if (this.player.car) {
+        new VehicleControls(this.player.car.vehicle);
+      }
     }
   }
 

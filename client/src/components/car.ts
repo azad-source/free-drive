@@ -40,6 +40,7 @@ export class Car {
       qy: 0,
       qz: 0,
       w: 0,
+      whInfo: [],
       ...state,
     };
     this.addChasis();
@@ -187,16 +188,55 @@ export class Car {
       qy: this.chassisBody.quaternion.y,
       qz: this.chassisBody.quaternion.z,
       w: this.chassisBody.quaternion.w,
+      whInfo: this.vehicle.wheelInfos.map((w) => ({
+        st_wh: w.steering,
+        engFrc: w.engineForce,
+      })),
     };
   }
 
   setState(state: IGameState) {
-    const { x, y, z, qx, qy, qz, w } = state;
+    const { x, y, z, qx, qy, qz, w, whInfo } = state;
 
     this.state = state;
     this.vehicle.chassisBody.position.copy(new CANNON.Vec3(x, y, z));
     this.vehicle.chassisBody.quaternion.copy(
       new CANNON.Quaternion(qx, qy, qz, w)
     );
+    whInfo.forEach((w, i) => {
+      this.vehicle.wheelInfos[i].steering = w.st_wh;
+      this.vehicle.wheelInfos[i].engineForce = w.engFrc;
+    });
+  }
+
+  removeCar() {
+    const car = this;
+
+    this.scene.remove(car.chassisMesh);
+    car.chassisMesh.geometry.dispose();
+    car.vehicle.removeFromWorld(this.world);
+    car.wheelMeshes.forEach((w) => {
+      this.scene.remove(w);
+      w.geometry.dispose();
+      removeMaterial(w);
+    });
+
+    car.wheelBodies.forEach((w) => {
+      this.world.removeBody(w);
+    });
+
+    if (this.world && car) {
+      this.world.removeBody(car.chassisBody);
+    }
+  }
+}
+
+function removeMaterial(mesh: THREE.Mesh) {
+  if (mesh.material) {
+    if (Array.isArray(mesh.material)) {
+      mesh.material.forEach((mat) => mat.dispose());
+    } else {
+      mesh.material.dispose();
+    }
   }
 }

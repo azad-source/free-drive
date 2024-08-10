@@ -9,7 +9,7 @@
     "build-all": "yarn workspace client build && yarn workspace server build",
     "build-server": "yarn workspace server build",
     "start-server": "yarn build-server && yarn workspace server start",
-    "start-all": "concurrently \"yarn workspace server start\" \"yarn workspace client dev\""
+    "start-all": "yarn build-all && concurrently \"yarn workspace server start\" \"yarn workspace client dev\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

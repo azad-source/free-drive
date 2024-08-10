@@ -34,5 +34,5 @@ export const mass = {
 };
 
 export const segmentCount = {
-  wheel: 20,
+  wheel: 10,
 };

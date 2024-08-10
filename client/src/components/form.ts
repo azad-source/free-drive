@@ -1,14 +1,16 @@
 import { generateUUID } from "three/src/math/MathUtils.js";
 import { sessionFields } from "../config/user.config";
+import { Player } from "./player";
+import { IGameState } from "../models/user.models";
 
 export class EntryForm {
   form: HTMLFormElement;
 
-  constructor() {
+  constructor(callback: (userId: string) => void) {
     if (!sessionStorage.getItem(sessionFields.playerId)) {
       this.init();
     } else {
-      this.deleteUserButton();
+      this.deleteUserButton(callback);
     }
   }
 
@@ -58,7 +60,7 @@ export class EntryForm {
     this.form.remove();
   }
 
-  deleteUserButton() {
+  deleteUserButton(callback: (userId: string) => void) {
     const deleteUserBtn = document.createElement("button");
     deleteUserBtn.style.position = "absolute";
     deleteUserBtn.style.right = "0";
@@ -69,6 +71,7 @@ export class EntryForm {
     deleteUserBtn.style.width = "150px";
 
     deleteUserBtn.addEventListener("click", (e) => {
+      callback(sessionStorage.getItem(sessionFields.playerId) || "");
       sessionStorage.removeItem(sessionFields.playerId);
       sessionStorage.removeItem(sessionFields.playerName);
       window.location.reload();

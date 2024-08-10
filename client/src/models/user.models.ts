@@ -7,4 +7,11 @@ export interface IGameState {
   qy: number;
   qz: number;
   w: number;
+  whInfo: WhInfo[];
+  isRemoved?: boolean;
+}
+
+export interface WhInfo {
+  st_wh: number; // угол поворота передних колес
+  engFrc: number; // скорость
 }
