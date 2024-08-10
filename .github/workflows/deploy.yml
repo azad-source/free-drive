@@ -54,6 +54,8 @@ jobs:
             git pull
             yarn install
             yarn build
+            yarn install-all
+            yarn build-all
             yarn start-all
         env:
           WEB_SOCKET_PORT: 80
