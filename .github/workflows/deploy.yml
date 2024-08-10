@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: "20.x"
 
+      - name: Set corepack enable
+        run: corepack enable
+
       - name: Install dependencies for client
         working-directory: client
         run: yarn install
