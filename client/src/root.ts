@@ -58,9 +58,9 @@ export class Root {
   }
 
   initWebSocket() {
-    const host = "ws://m-azad.ru:8080" || import.meta.env.VITE_WEB_SOCKET_HOST;
+    const host = import.meta.env.VITE_WEB_SOCKET_HOST;
 
-    this.ws = new WebSocket(host);
+    this.ws = new WebSocket("ws://localhost:8080");
 
     this.ws.onopen = () => {
       console.log("Connected to WebSocket server");
