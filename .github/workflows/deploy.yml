@@ -32,9 +32,8 @@ jobs:
           REMOTE_USER: ${{ secrets.SSH_USER }}
           TARGET: ${{ secrets.WORK_DIR }}
           EXCLUDE: "/dist/, /node_modules/"
-          SCRIPT_AFTER: |
-            cd ${{ secrets.WORK_DIR }}
-            git checkout ${{ secrets.MAIN_BRANCH }}
-            git pull
-            yarn install
-            yarn build
+          # SCRIPT_AFTER: cd ${{ secrets.WORK_DIR }}
+          #   git checkout ${{ secrets.MAIN_BRANCH }}
+          #   git pull
+          #   yarn install
+          #   yarn build
