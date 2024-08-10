@@ -12,6 +12,7 @@ import { windowAutoResize } from "./components/windowResize";
 import { Player } from "./components/player";
 import { EntryForm } from "./components/form";
 import { VehicleControls } from "./components/controls";
+import { IGameState } from "./models/user.models";
 
 export class Root {
   ws: WebSocket;
@@ -21,7 +22,8 @@ export class Root {
   world: CANNON.World;
   ground: Ground;
   cars: Car[] = [];
-  player: Player;
+  users: IGameState[] = [];
+  player?: Player;
   orbit: OrbitControls;
   debug: typeof cannonDebugger.prototype;
 
@@ -31,21 +33,22 @@ export class Root {
   }
 
   init() {
-    new EntryForm();
+    this.scene = getScene();
+    this.playerCamera = new PlayerCamera(this.scene);
+    this.renderer = getRenderer();
+    this.orbit = new OrbitControls(
+      this.playerCamera.camera,
+      this.renderer.domElement
+    );
+    this.orbit.update();
+    this.initWorld();
+    this.initWebSocket();
 
+    new EntryForm();
     this.player = new Player();
 
     if (this.player.isExist()) {
-      this.initWebSocket();
-      this.scene = getScene();
-      this.playerCamera = new PlayerCamera(this.scene);
-      this.renderer = getRenderer();
-      this.orbit = new OrbitControls(
-        this.playerCamera.camera,
-        this.renderer.domElement
-      );
-      this.orbit.update();
-      this.initPhysics();
+      this.initPlayerCar();
       windowAutoResize(this.playerCamera.camera, this.renderer);
     }
   }
@@ -59,6 +62,18 @@ export class Root {
 
     this.ws.onmessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
+      this.users = data;
+      this.users.forEach((state) => {
+        if (state.id) {
+          const carIndex = this.cars.findIndex((c) => c.state?.id === state.id);
+          if (carIndex !== -1) {
+            this.cars[carIndex].setState(state);
+          } else {
+            const car = new Car(this.scene, this.world, state);
+            this.cars.push(car);
+          }
+        }
+      });
       console.log("Received data:", data);
     };
 
@@ -73,20 +88,21 @@ export class Root {
     }
   }
 
-  initPhysics() {
+  initWorld() {
     this.world = new CANNON.World();
     this.world.broadphase = new CANNON.SAPBroadphase(this.world);
     this.world.gravity.set(0, -10, 0);
     this.world.defaultContactMaterial.friction = 0;
     this.ground = new Ground(this.scene, this.world);
-    this.cars.push(new Car(this.scene, this.world));
-    this.cars.push(
-      new Car(this.scene, this.world, { id: "", x: 5, y: 4, z: 0 })
-    );
-    new VehicleControls(this.cars[0].vehicle);
-
     this.debug = cannonDebugger(this.scene, this.world);
     this.animate();
+  }
+
+  initPlayerCar() {
+    if (this.player) {
+      this.player.defineCar(new Car(this.scene, this.world));
+      new VehicleControls(this.player.car.vehicle);
+    }
   }
 
   animate() {
@@ -103,13 +119,15 @@ export class Root {
       car.updateFrame();
     });
 
-    this.playerCamera.updateCamera(this.cars[0]);
+    this.player?.car?.updateFrame();
 
-    this.debug.update();
+    if (this.player?.car) {
+      this.playerCamera.updateCamera(this.player.car);
+      this.sendGameState(this.player.car.state);
+    }
+
+    // this.debug.update();
 
     this.renderer.render(this.scene, this.playerCamera.camera);
-
-    // TODO:
-    // this.sendGameState("asd");
   }
 }

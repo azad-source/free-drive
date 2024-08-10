@@ -1,0 +1,19 @@
+{
+    "name": "server",
+    "version": "0.1.0",
+    "main": "server.ts",
+    "engines": {
+        "node": "~20.13",
+        "yarn": "~4"
+    },
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/server.js"
+    },
+    "devDependencies": {
+        "@types/node": "^22.2.0",
+        "@types/ws": "^8.5.12",
+        "typescript": "^5.5.3"
+    },
+    "packageManager": "yarn@4.4.0"
+}

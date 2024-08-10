@@ -1,0 +1,31 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": "~20.13",
+    "yarn": "~4"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/dat.gui": "^0.7.13",
+    "@types/three": "^0.166.0",
+    "@types/ws": "^8.5.12",
+    "typescript": "^5.5.3",
+    "vite": "^5.3.4",
+    "vite-tsconfig-paths": "^4.3.2"
+  },
+  "dependencies": {
+    "cannon-es": "^0.20.0",
+    "cannon-es-debugger": "^1.0.0",
+    "dat.gui": "^0.7.9",
+    "nipplejs": "^0.10.2",
+    "three": "^0.166.1",
+    "ws": "^8.18.0"
+  },
+  "packageManager": "yarn@4.4.0"
+}

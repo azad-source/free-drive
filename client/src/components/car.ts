@@ -8,6 +8,7 @@ import {
 } from "../config/vehicle.config";
 import { groundOptions } from "../config/ground.config";
 import { IGameState } from "../models/user.models";
+import { sessionFields } from "../config/user.config";
 
 const wheelPosition: Record<number, number[]> = {
   0: [1, 0, 1], // Переднее правое колесо
@@ -25,12 +26,22 @@ export class Car {
   wheelMeshes: THREE.Mesh[] = [];
   wheelBodies: CANNON.Body[] = [];
   wheelMaterial = new CANNON.Material("wheelMaterial");
-  state?: IGameState;
+  state: IGameState;
 
   constructor(scene: THREE.Scene, world: CANNON.World, state?: IGameState) {
     this.scene = scene;
     this.world = world;
-    this.state = state;
+    this.state = {
+      id: sessionStorage.getItem(sessionFields.playerId) || "",
+      x: 0,
+      y: 4,
+      z: 0,
+      qx: 0,
+      qy: 0,
+      qz: 0,
+      w: 0,
+      ...state,
+    };
     this.addChasis();
     this.addWheels();
   }
@@ -44,15 +55,11 @@ export class Car {
     this.chassisBody = new CANNON.Body({
       shape: new CANNON.Box(new CANNON.Vec3(1, 0.5, 0.5)),
       mass: mass.vehicle,
-      position: new CANNON.Vec3(
-        this.state?.x || 0,
-        this.state?.y || 4,
-        this.state?.z || 0
-      ),
+      position: new CANNON.Vec3(this.state.x, this.state.y, this.state.z),
       quaternion: new CANNON.Quaternion(
-        this.state?.qx || 0,
-        this.state?.qy || 0,
-        this.state?.qz || 0
+        this.state.qx,
+        this.state.qy,
+        this.state.qz
       ),
       linearDamping: 0.1,
       angularDamping: 0.1,
@@ -170,5 +177,26 @@ export class Car {
       wheelMesh.quaternion.copy(wheelBody.quaternion);
       wheelMesh.rotateZ(Math.PI / 2);
     }
+
+    this.state = {
+      ...this.state,
+      x: this.chassisBody.position.x,
+      y: this.chassisBody.position.y,
+      z: this.chassisBody.position.z,
+      qx: this.chassisBody.quaternion.x,
+      qy: this.chassisBody.quaternion.y,
+      qz: this.chassisBody.quaternion.z,
+      w: this.chassisBody.quaternion.w,
+    };
+  }
+
+  setState(state: IGameState) {
+    const { x, y, z, qx, qy, qz, w } = state;
+
+    this.state = state;
+    this.vehicle.chassisBody.position.copy(new CANNON.Vec3(x, y, z));
+    this.vehicle.chassisBody.quaternion.copy(
+      new CANNON.Quaternion(qx, qy, qz, w)
+    );
   }
 }

@@ -1,4 +1,5 @@
 import WebSocket, { WebSocketServer } from "ws";
+import { IGameState } from "./models/user.models";
 
 const server = new WebSocketServer({ port: 8080 });
 
@@ -7,17 +8,27 @@ const clients: Set<WebSocket> = new Set();
 server.on("connection", (ws: WebSocket) => {
   console.log("New client connected");
   clients.add(ws);
+  const users: IGameState[] = [];
 
-  ws.on("message", (message: WebSocket.MessageEvent) => {
+  ws.on("message", (message: string) => {
     console.log(`Received message: ${message}`);
+
+    const gameState: IGameState = JSON.parse(message);
+
+    if (users.every((i) => i.id !== gameState.id)) {
+      users.push(gameState);
+    } else {
+      users.forEach((state, index) => {
+        if (state.id === gameState.id) {
+          users.splice(index, 1, gameState);
+        }
+      });
+    }
 
     // Broadcast message to all clients
     clients.forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
-        // Ensure message is a string before sending
-        if (typeof message.data === "string") {
-          client.send(message.data);
-        }
+        client.send(JSON.stringify(users));
       }
     });
   });

@@ -14,10 +14,35 @@ export class Ground {
     this.scene = scene;
     this.world = world;
 
-    this.addGround();
+    this.addPlaneGround();
   }
 
-  addGround() {
+  addPlaneGround() {
+    const { sizeX, sizeZ } = this;
+
+    const groundMeshMaterial = new THREE.MeshStandardMaterial({
+      color: "red",
+      side: THREE.DoubleSide,
+    });
+
+    this.groundMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(sizeX, sizeZ),
+      groundMeshMaterial
+    );
+    this.groundMesh.rotation.x = -Math.PI / 2;
+    this.scene.add(this.groundMesh);
+
+    const groundShape = new CANNON.Plane();
+    this.groundBody = new CANNON.Body({
+      mass: 0,
+      material: groundOptions.material,
+    });
+    this.groundBody.addShape(groundShape);
+    this.groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+    this.world.addBody(this.groundBody);
+  }
+
+  addCurvedGround() {
     const { sizeX, sizeZ } = this;
     const matrix: number[][] = [];
 

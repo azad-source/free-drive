@@ -3,7 +3,7 @@ import * as THREE from "three";
 export function getScene() {
   const scene = new THREE.Scene();
   const axes = new THREE.AxesHelper(50);
-  const grid = new THREE.GridHelper(50, 40);
+  const grid = new THREE.GridHelper(150, 150);
 
   const dLight = new THREE.DirectionalLight(0xffffff, 20.0);
   dLight.position.setScalar(10);
@@ -16,7 +16,14 @@ export function getScene() {
   const ambLight = new THREE.AmbientLight(0xffffff);
 
   scene.background = new THREE.Color(0xa0a0a0);
-  scene.add(axes, grid, dLight, ambLight, dLightHelper, dLightShadowHelper);
+  scene.add(
+    // axes,
+    grid,
+    dLight,
+    ambLight
+    // dLightHelper,
+    // dLightShadowHelper
+  );
 
   return scene;
 }
