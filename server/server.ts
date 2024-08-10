@@ -1,5 +1,4 @@
 import WebSocket, { WebSocketServer } from "ws";
-require("dotenv").config();
 
 const PORT =
   typeof process.env.WEB_SOCKET_PORT === "number"
