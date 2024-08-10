@@ -2,12 +2,12 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./",
-    "module": "ESNext",
+    "module": "commonjs",
+    "lib": ["ES6", "DOM"],
     "target": "es6",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "moduleResolution": "Bundler"
+    "skipLibCheck": true
   },
   "exclude": ["node_modules"]
 }

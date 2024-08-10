@@ -1,12 +1,5 @@
 import WebSocket, { WebSocketServer } from "ws";
 
-const PORT =
-  typeof process.env.WEB_SOCKET_PORT === "number"
-    ? process.env.WEB_SOCKET_PORT
-    : 8080;
-
-const HOST = "ws://m-azad.ru" || process.env.WEB_SOCKET_HOST;
-
 const server = new WebSocketServer({ port: 8080 });
 
 const clients: Set<WebSocket> = new Set();
