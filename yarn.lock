@@ -1386,6 +1386,7 @@ __metadata:
     "@types/ws": "npm:^8.5.12"
     dotenv: "npm:^16.4.5"
     typescript: "npm:^5.5.3"
+    ws: "npm:^8.18.0"
   languageName: unknown
   linkType: soft
 
