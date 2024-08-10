@@ -8,7 +8,7 @@ const PORT =
 
 const HOST = "ws://m-azad.ru" || process.env.WEB_SOCKET_HOST;
 
-const server = new WebSocketServer({ port: 8080 });
+const server = new WebSocketServer({ port: 8080, host: HOST });
 
 const clients: Set<WebSocket> = new Set();
 
