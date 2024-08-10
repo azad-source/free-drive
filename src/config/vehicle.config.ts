@@ -16,7 +16,7 @@ export const defaultWheelOptions: WheelInfoOptions = {
   customSlidingRotationalSpeed: -30,
 };
 
-export const defaultVehicleOptions = {
+export const vehicleOptions = {
   indexRightAxis: 0,
   indexUpAxis: 1,
   indexForwardAxis: 2,
@@ -31,4 +31,8 @@ export const movementOptions = {
 export const mass = {
   wheel: 100,
   vehicle: 500,
+};
+
+export const segmentCount = {
+  wheel: 20,
 };

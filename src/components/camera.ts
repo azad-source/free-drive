@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { Car } from "./car";
 
 // Create a camera
 const fov = 45; // AKA Field of View
@@ -12,12 +13,54 @@ export const defaultCameraPosition = {
   z: 10,
 };
 
-export function getCamera() {
-  const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(
-    defaultCameraPosition.x,
-    defaultCameraPosition.y,
-    defaultCameraPosition.z
-  );
-  return camera;
+export class PlayerCamera {
+  scene: THREE.Scene;
+  camera: THREE.PerspectiveCamera;
+  followCam: THREE.Object3D;
+
+  constructor(scene: THREE.Scene) {
+    this.scene = scene;
+    this.init();
+  }
+
+  init() {
+    this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    this.camera.position.set(
+      defaultCameraPosition.x,
+      defaultCameraPosition.y,
+      defaultCameraPosition.z
+    );
+
+    this.followCam = new THREE.Object3D();
+    this.followCam.position.copy(this.camera.position);
+    this.scene.add(this.followCam);
+  }
+
+  updateCamera(car: Car) {
+    this.camera.position.lerp(
+      this.followCam.getWorldPosition(new THREE.Vector3()),
+      0.05
+    );
+
+    if (car.chassisMesh) {
+      const targetPosition = car.chassisMesh.position;
+
+      const angle = 0;
+      const distance = 0;
+      const height = 0;
+
+      const targetX = targetPosition.x + distance * Math.cos(angle);
+      const targetY = targetPosition.y + height;
+      const targetZ = targetPosition.z + distance * Math.sin(angle);
+
+      this.camera.lookAt(car.chassisMesh.position);
+      const { x, y, z } = defaultCameraPosition;
+      this.camera.position.set(x + targetX, y + targetY, z + targetZ);
+    }
+
+    // if (this.helper.sun != undefined) {
+    //   this.helper.sun.position.copy(this.camera.position);
+    //   this.helper.sun.position.y += 10;
+    // }
+  }
 }

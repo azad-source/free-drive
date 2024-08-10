@@ -8,12 +8,15 @@
   },
   "scripts": {
     "dev": "vite",
+    "server": "tsc && node server.ts",
     "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@types/dat.gui": "^0.7.13",
+    "@types/node": "^22.2.0",
     "@types/three": "^0.166.0",
+    "@types/ws": "^8.5.12",
     "typescript": "^5.5.3",
     "vite": "^5.3.4",
     "vite-tsconfig-paths": "^4.3.2"
@@ -23,7 +26,8 @@
     "cannon-es-debugger": "^1.0.0",
     "dat.gui": "^0.7.9",
     "nipplejs": "^0.10.2",
-    "three": "^0.166.1"
+    "three": "^0.166.1",
+    "ws": "^8.18.0"
   },
   "packageManager": "yarn@4.4.0"
 }
