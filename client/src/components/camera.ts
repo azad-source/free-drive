@@ -8,9 +8,9 @@ const near = 0.1; // the near clipping plane
 const far = 1000; // the far clipping plane
 
 export const defaultCameraPosition = {
-  x: -15,
+  x: 25,
   y: 15,
-  z: 10,
+  z: 0,
 };
 
 export class PlayerCamera {
@@ -42,32 +42,34 @@ export class PlayerCamera {
       0.05
     );
 
-    const targetPosition = car?.gltf?.chasis?.position;
+    const target = car?.gltf?.chasis;
 
-    if (targetPosition) {
+    if (target) {
       const angle = 0;
       const distance = 0;
       const height = 0;
 
-      const targetX = targetPosition.x + distance * Math.cos(angle);
-      const targetY = targetPosition.y + height;
-      const targetZ = targetPosition.z + distance * Math.sin(angle);
+      const offset = new THREE.Vector3(
+        defaultCameraPosition.x,
+        defaultCameraPosition.y,
+        defaultCameraPosition.z
+      );
 
-      const offset = new THREE.Vector3(0, 5, 10); // Отступ камеры
-      const carRotation = new THREE.Matrix4().makeRotationY(targetPosition.y);
+      const carRotation = new THREE.Matrix4().makeRotationFromQuaternion(
+        new THREE.Quaternion(
+          target.quaternion.x,
+          target.quaternion.y,
+          target.quaternion.z,
+          target.quaternion.w
+        )
+      );
+
       const cameraPosition = offset
         .applyMatrix4(carRotation)
-        .add(targetPosition);
+        .add(target.position);
 
       this.camera.position.copy(cameraPosition);
-      this.camera.lookAt(targetPosition);
-      // const { x, y, z } = defaultCameraPosition;
-      // this.camera.position.set(x + targetX, y + targetY, z + targetZ);
+      this.camera.lookAt(target.position);
     }
-
-    // if (this.helper.sun != undefined) {
-    //   this.helper.sun.position.copy(this.camera.position);
-    //   this.helper.sun.position.y += 10;
-    // }
   }
 }
