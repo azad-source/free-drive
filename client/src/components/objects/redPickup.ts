@@ -2,6 +2,14 @@ import * as THREE from "three";
 import { GLTFLoader, GLTF } from "three/examples/jsm/Addons.js";
 
 const gltfCar = new URL("../../assets/models/car/scene.gltf", import.meta.url);
+const binCar = new URL(
+  "../../assets/models/car/textures/material_0_baseColor.png",
+  import.meta.url
+);
+const texturesCar = new URL(
+  "../../assets/models/car/scene.bin",
+  import.meta.url
+);
 
 export class RedPickup {
   scene: THREE.Scene;
