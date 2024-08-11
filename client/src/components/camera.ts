@@ -64,7 +64,7 @@ export class PlayerCamera {
         .applyMatrix4(carRotation)
         .add(target.position);
 
-      this.camera.position.copy(cameraPosition);
+      this.followCam.position.copy(cameraPosition);
       this.camera.lookAt(target.position);
     }
   }
