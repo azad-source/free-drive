@@ -45,10 +45,6 @@ export class PlayerCamera {
     const target = car?.gltf?.chasis;
 
     if (target) {
-      const angle = 0;
-      const distance = 0;
-      const height = 0;
-
       const offset = new THREE.Vector3(
         defaultCameraPosition.x,
         defaultCameraPosition.y,
