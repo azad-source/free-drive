@@ -55,6 +55,6 @@ jobs:
             yarn install
             yarn build
             yarn start-all
-            sudo pm2 restart server
+            pm2 restart server.js
         env:
           VITE_WEB_SOCKET_HOST: ws://m-azad.ru:8080
