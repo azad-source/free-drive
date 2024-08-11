@@ -3,7 +3,7 @@ import { JoystickManagerOptions } from "nipplejs";
 export const joystickOptions: JoystickManagerOptions = {
   zone: document.getElementById("zone_joystick") || document.body,
   mode: "static", // 'dynamic', 'static' or 'semi'
-  position: { right: "10%", bottom: "20%" }, // preset position for 'static' mode
+  position: { right: "20%", bottom: "20%" }, // preset position for 'static' mode
   color: "red",
   size: 150,
   //   threshold: 0.1, // before triggering a directional event
