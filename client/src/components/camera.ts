@@ -53,9 +53,16 @@ export class PlayerCamera {
       const targetY = targetPosition.y + height;
       const targetZ = targetPosition.z + distance * Math.sin(angle);
 
+      const offset = new THREE.Vector3(0, 5, 10); // Отступ камеры
+      const carRotation = new THREE.Matrix4().makeRotationY(targetPosition.y);
+      const cameraPosition = offset
+        .applyMatrix4(carRotation)
+        .add(targetPosition);
+
+      this.camera.position.copy(cameraPosition);
       this.camera.lookAt(targetPosition);
-      const { x, y, z } = defaultCameraPosition;
-      this.camera.position.set(x + targetX, y + targetY, z + targetZ);
+      // const { x, y, z } = defaultCameraPosition;
+      // this.camera.position.set(x + targetX, y + targetY, z + targetZ);
     }
 
     // if (this.helper.sun != undefined) {

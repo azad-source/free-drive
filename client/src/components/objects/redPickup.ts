@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { GLTFLoader, GLTF } from "three/examples/jsm/Addons.js";
 
+const gltfCar = new URL("../../assets/models/car/scene.gltf", import.meta.url);
+
 export class RedPickup {
   scene: THREE.Scene;
   model: GLTF["scene"];
@@ -19,7 +21,7 @@ export class RedPickup {
 
   init() {
     const gltfLoader = new GLTFLoader();
-    gltfLoader.load("src/assets/models/car/scene.gltf", (gltf) => {
+    gltfLoader.load(gltfCar.href, (gltf) => {
       this.model = gltf.scene;
 
       // this.model.traverse((node) => {
