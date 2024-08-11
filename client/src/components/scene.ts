@@ -6,11 +6,12 @@ export function getScene() {
   const grid = new THREE.GridHelper(150, 150);
 
   const dLight = new THREE.DirectionalLight(0xffffff, 20.0);
-  dLight.position.setScalar(10);
+  dLight.position.setScalar(10).normalize();
   dLight.position.set(-30, 50, 0);
   dLight.castShadow = true;
   dLight.shadow.camera.bottom = -5;
   dLight.shadow.camera.scale.set(5, 5, 5);
+
   const dLightHelper = new THREE.DirectionalLightHelper(dLight, 10);
   const dLightShadowHelper = new THREE.CameraHelper(dLight.shadow.camera);
   const ambLight = new THREE.AmbientLight(0xffffff);
@@ -18,10 +19,10 @@ export function getScene() {
   scene.background = new THREE.Color(0xa0a0a0);
   scene.add(
     // axes,
-    grid,
+    // grid,
     dLight,
     ambLight
-    // dLightHelper,
+    // dLightHelper
     // dLightShadowHelper
   );
 

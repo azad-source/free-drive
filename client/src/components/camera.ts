@@ -42,9 +42,9 @@ export class PlayerCamera {
       0.05
     );
 
-    if (car.chassisMesh) {
-      const targetPosition = car.chassisMesh.position;
+    const targetPosition = car?.gltf?.chasis?.position;
 
+    if (targetPosition) {
       const angle = 0;
       const distance = 0;
       const height = 0;
@@ -53,7 +53,7 @@ export class PlayerCamera {
       const targetY = targetPosition.y + height;
       const targetZ = targetPosition.z + distance * Math.sin(angle);
 
-      this.camera.lookAt(car.chassisMesh.position);
+      this.camera.lookAt(targetPosition);
       const { x, y, z } = defaultCameraPosition;
       this.camera.position.set(x + targetX, y + targetY, z + targetZ);
     }

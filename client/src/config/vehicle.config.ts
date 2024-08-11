@@ -4,14 +4,14 @@ export const defaultWheelOptions: WheelInfoOptions = {
   radius: 0.6, // радиус колеса
   directionLocal: new Vec3(0, -1, 0),
   suspensionStiffness: 50, // жесткость подвески (Определяет, насколько жестко подвеска колеса реагирует на удары и деформации. Более высокие значения делают подвеску жестче, что уменьшает её прогиб.)
-  suspensionRestLength: 0.3, // клиренс
-  frictionSlip: 1.6, // трение между колесами и дорогой (чем больше значение тем лучше сцепление)
+  suspensionRestLength: 0.9, // клиренс
+  frictionSlip: 2.2, // трение между колесами и дорогой (чем больше значение тем лучше сцепление)
   rollInfluence: 0.4, // Влияние наклона (Определяет, как сильно колеса реагируют на наклон автомобиля. Это помогает уменьшить или увеличить эффект наклона колес.)
-  maxSuspensionForce: 10000, // Жесткость подвески (Это значение предотвращает чрезмерное сжатие или растяжение подвески)
+  maxSuspensionForce: 50000, // Жесткость подвески (Это значение предотвращает чрезмерное сжатие или растяжение подвески)
   dampingRelaxation: 2.3,
   dampingCompression: 4.4,
   axleLocal: new Vec3(-1, 0, 0), // направление вращения колес
-  maxSuspensionTravel: 0.3,
+  maxSuspensionTravel: 0.8,
   useCustomSlidingRotationalSpeed: true,
   customSlidingRotationalSpeed: -30,
 };

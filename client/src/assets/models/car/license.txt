@@ -1,0 +1,8 @@
+Model Information:
+* title:	the-red-car
+* source:	https://sketchfab.com/3d-models/the-red-car-c6a12a37a1054a60aece60cfda7d5db4
+* author:	pahtic (https://sketchfab.com/pahtic)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

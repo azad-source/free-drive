@@ -9,21 +9,25 @@ import {
 import { groundOptions } from "../config/ground.config";
 import { IGameState } from "../models/user.models";
 import { sessionFields } from "../config/user.config";
+import { RedPickup } from "./objects/redPickup";
+
+const wheelXOffset = 0.3; // вынос колес
+const fWheelPos = 1.65;
+const rWheelPos = -1.7;
 
 const wheelPosition: Record<number, number[]> = {
-  0: [1, 0, 1], // Переднее правое колесо
-  1: [-1, 0, 1], // Переднее левое колесо
-  2: [1, 0, -1], // Заднее правое колесо
-  3: [-1, 0, -1], // Заднее левое колесо
+  0: [1 + wheelXOffset, 0, fWheelPos], // Переднее правое колесо
+  1: [-(1 + wheelXOffset), 0, fWheelPos], // Переднее левое колесо
+  2: [1 + wheelXOffset, 0, rWheelPos], // Заднее правое колесо
+  3: [-(1 + wheelXOffset), 0, rWheelPos], // Заднее левое колесо
 };
 
 export class Car {
   scene: THREE.Scene;
   world: CANNON.World;
   vehicle: CANNON.RaycastVehicle;
-  chassisMesh: THREE.Mesh;
+  gltf: RedPickup;
   chassisBody: CANNON.Body;
-  wheelMeshes: THREE.Mesh[] = [];
   wheelBodies: CANNON.Body[] = [];
   wheelMaterial = new CANNON.Material("wheelMaterial");
   state: IGameState;
@@ -43,18 +47,16 @@ export class Car {
       whInfo: [],
       ...state,
     };
+
+    this.gltf = new RedPickup(this.scene);
+
     this.addChasis();
     this.addWheels();
   }
 
   addChasis() {
-    const chassisGeometry = new THREE.BoxGeometry(2, 1, 4);
-    const chassisMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
-    this.chassisMesh = new THREE.Mesh(chassisGeometry, chassisMaterial);
-    this.scene.add(this.chassisMesh);
-
     this.chassisBody = new CANNON.Body({
-      shape: new CANNON.Box(new CANNON.Vec3(1, 0.5, 0.5)),
+      shape: new CANNON.Box(new CANNON.Vec3(1.25, 0.8, 3)),
       mass: mass.vehicle,
       position: new CANNON.Vec3(this.state.x, this.state.y, this.state.z),
       quaternion: new CANNON.Quaternion(
@@ -64,8 +66,6 @@ export class Car {
       ),
       linearDamping: 0.1,
       angularDamping: 0.1,
-      // type: CANNON.BODY_TYPES.DYNAMIC,
-      // angularVelocity: new CANNON.Vec3(0, 0.5, 0),
     });
 
     this.vehicle = new CANNON.RaycastVehicle({
@@ -91,24 +91,6 @@ export class Car {
     this.vehicle.addWheel(wheelOptions(3)); // Rear left wheel
 
     this.vehicle.wheelInfos.forEach((wheel, index) => {
-      const wheelMeshGeometry = new THREE.CylinderGeometry(
-        wheel.radius,
-        wheel.radius,
-        wheel.radius / 1,
-        segmentCount.wheel
-      );
-      const wheelMeshMaterial = new THREE.MeshStandardMaterial({
-        color: 0x0000ff,
-      });
-      const wheelMesh = new THREE.Mesh(wheelMeshGeometry, wheelMeshMaterial);
-      wheelMesh.position.copy(new THREE.Vector3(...wheelPosition[index]));
-      wheelMesh.quaternion.copy(
-        new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0))
-      );
-
-      this.wheelMeshes.push(wheelMesh);
-      this.scene.add(wheelMesh);
-
       const wheelShape = new CANNON.Cylinder(
         wheel.radius,
         wheel.radius,
@@ -119,13 +101,13 @@ export class Car {
         mass: mass.wheel,
         material: this.wheelMaterial,
         quaternion: new CANNON.Quaternion().setFromEuler(0, 0, -Math.PI / 2),
-        type: CANNON.Body.KINEMATIC,
+        type: CANNON.Body.DYNAMIC,
         collisionFilterGroup: 0,
       });
 
-      wheelBody.position.x = wheelMesh.position.x;
-      wheelBody.position.y = wheelMesh.position.y;
-      wheelBody.position.z = wheelMesh.position.z;
+      // wheelBody.position.x = wheelMesh.position.x;
+      // wheelBody.position.y = wheelMesh.position.y;
+      // wheelBody.position.z = wheelMesh.position.z;
 
       const quaternion = new CANNON.Quaternion().setFromEuler(
         0,
@@ -157,26 +139,17 @@ export class Car {
   }
 
   updateFrame() {
-    this.chassisMesh?.position.copy(this.chassisBody.position);
-    this.chassisMesh?.quaternion.copy(this.chassisBody.quaternion);
+    this.gltf.chasis?.position.copy(this.chassisBody.position);
+    this.gltf.chasis?.quaternion.copy(this.chassisBody.quaternion);
+    this.gltf.chasis?.rotateY(Math.PI / 2);
+    this.gltf.chasis?.translateX(0.5);
+    this.gltf.chasis?.translateY(0.1);
 
     for (let i = 0; i < this.vehicle.wheelInfos.length; i++) {
       const wheelBody = this.wheelBodies[i];
-      const wheelMesh = this.wheelMeshes[i];
-      // const wheelInfo = this.vehicle.wheelInfos[i];
-
-      // wheelMesh.position.copy(wheelBody.position);
-      // wheelMesh.quaternion.copy(wheelBody.quaternion);
-
-      // this.vehicle.updateWheelTransform(i);
-      // const transform = wheelInfo.worldTransform;
-      // wheelMesh.position.copy(transform.position);
-      // wheelMesh.quaternion.copy(transform.quaternion);
-      // wheelBody.position.copy(transform.position);
-      // wheelBody.quaternion.copy(transform.quaternion);
-      wheelMesh.position.copy(wheelBody.position);
-      wheelMesh.quaternion.copy(wheelBody.quaternion);
-      wheelMesh.rotateZ(Math.PI / 2);
+      this.gltf.wheels[i]?.position.copy(wheelBody.position);
+      this.gltf.wheels[i]?.quaternion.copy(wheelBody.quaternion);
+      this.gltf.wheels[i]?.rotateY(-Math.PI / 2);
     }
 
     this.state = {
@@ -212,13 +185,13 @@ export class Car {
   removeCar() {
     const car = this;
 
-    this.scene.remove(car.chassisMesh);
-    car.chassisMesh.geometry.dispose();
+    this.scene.remove(car.gltf.chasis);
+    // car.chassisMesh.geometry.dispose();
     car.vehicle.removeFromWorld(this.world);
-    car.wheelMeshes.forEach((w) => {
+    car.gltf.wheels.forEach((w) => {
       this.scene.remove(w);
-      w.geometry.dispose();
-      removeMaterial(w);
+      // w.geometry.dispose();
+      // removeMaterial(w);
     });
 
     car.wheelBodies.forEach((w) => {

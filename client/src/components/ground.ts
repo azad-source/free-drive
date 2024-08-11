@@ -1,14 +1,17 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
 import { groundOptions } from "../config/ground.config";
+import roadImg from "../assets/textures/road.jpeg";
 
 export class Ground {
   scene: THREE.Scene;
   world: CANNON.World;
+  groundTexture: THREE.Texture;
+  groundMaterial: THREE.MeshBasicMaterial;
   groundMesh: THREE.Mesh;
   groundBody: CANNON.Body;
-  sizeX: number = 64;
-  sizeZ: number = 64;
+  sizeX: number = 150;
+  sizeZ: number = 150;
 
   constructor(scene: THREE.Scene, world: CANNON.World) {
     this.scene = scene;
@@ -20,14 +23,24 @@ export class Ground {
   addPlaneGround() {
     const { sizeX, sizeZ } = this;
 
-    const groundMeshMaterial = new THREE.MeshStandardMaterial({
-      color: "red",
+    this.groundTexture = new THREE.TextureLoader().load(roadImg);
+
+    this.groundTexture.wrapS = THREE.RepeatWrapping;
+    this.groundTexture.wrapT = THREE.RepeatWrapping;
+    this.groundTexture.repeat.set(10, 10);
+
+    this.groundMaterial = new THREE.MeshBasicMaterial({
       side: THREE.DoubleSide,
+      map: this.groundTexture,
+      // color: "#777777",
+      // metalness: 0.2,
+      // roughness: 0.6,
+      // envMapIntensity: 0.5,
     });
 
     this.groundMesh = new THREE.Mesh(
       new THREE.PlaneGeometry(sizeX, sizeZ),
-      groundMeshMaterial
+      this.groundMaterial
     );
     this.groundMesh.rotation.x = -Math.PI / 2;
     this.scene.add(this.groundMesh);
