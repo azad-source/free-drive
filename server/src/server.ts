@@ -2,7 +2,7 @@ import geckos from "@geckos.io/server";
 
 type IGame = Record<string, any>;
 
-const io = geckos({ cors: { origin: "m-azad.ru" } });
+const io = geckos({ cors: { allowAuthorization: true, origin: "m-azad.ru" } });
 
 io.listen(8080);
 
