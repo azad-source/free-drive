@@ -10,12 +10,12 @@ const server = http.createServer((req, res) => {
 });
 
 const io = geckos({
-  cors: { allowAuthorization: true, origin: "m-azad.ru:8080" },
+  cors: { allowAuthorization: true, origin: "m-azad.ru" },
 });
 
 io.addServer(server);
 
-io.listen(8080);
+server.listen(8080);
 
 const clients = new Set();
 
