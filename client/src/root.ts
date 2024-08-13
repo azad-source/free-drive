@@ -73,6 +73,8 @@ export class Root {
       const data = JSON.parse(event.data);
       this.users = data;
 
+      console.log("=== data", data);
+
       for (const userId in this.users) {
         const state = this.users[userId];
 
