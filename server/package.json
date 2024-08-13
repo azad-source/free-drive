@@ -11,7 +11,7 @@
     },
     "scripts": {
         "build": "node esbuild.config.js",
-        "start": "node dist/server.js"
+        "start": "node dist/server.cjs"
     },
     "devDependencies": {
         "@types/node": "^22.2.0",

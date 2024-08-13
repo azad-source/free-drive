@@ -54,5 +54,5 @@ jobs:
             git pull
             yarn install
             yarn build
-            yarn start-all
-            pm2 restart server.js
+            yarn start
+            pm2 restart server.cjs

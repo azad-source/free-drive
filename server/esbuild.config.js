@@ -6,7 +6,7 @@ esbuild
     bundle: true,
     platform: "node",
     target: "node20",
-    outfile: "dist/server.js",
+    outfile: "dist/server.cjs",
     minify: true, // Минимизирует бандл
     // external: ["ws"],
   })
