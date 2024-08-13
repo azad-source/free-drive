@@ -58,10 +58,10 @@ export class Root {
   }
 
   initWebSocket() {
-    const host = "ws://m-azad.ru:8080";
+    const host = "http://m-azad.ru";
     const localhost = "ws://localhost:8080";
 
-    this.channel = geckos({ port: 8080 });
+    this.channel = geckos({ url: host, port: 8080 });
 
     this.channel.onConnect((error) => {
       if (error) {
