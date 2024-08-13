@@ -1,15 +1,7 @@
 import * as THREE from "three";
-import { GLTFLoader, GLTF } from "three/examples/jsm/Addons.js";
+import { GLTFLoader, GLTF, DRACOLoader } from "three/examples/jsm/Addons.js";
 
 const gltfCar = new URL("../../assets/models/car/scene.gltf", import.meta.url);
-const binCar = new URL(
-  "../../assets/models/car/textures/material_0_baseColor.png",
-  import.meta.url
-);
-const texturesCar = new URL(
-  "../../assets/models/car/scene.bin",
-  import.meta.url
-);
 
 export class RedPickup {
   scene: THREE.Scene;
@@ -29,6 +21,11 @@ export class RedPickup {
 
   init() {
     const gltfLoader = new GLTFLoader();
+
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath("libs/draco3dgltf");
+    dracoLoader.preload();
+
     gltfLoader.load(gltfCar.href, (gltf) => {
       this.model = gltf.scene;
 
@@ -65,6 +62,8 @@ export class RedPickup {
       // this.chasis.material.wireframe = true;
       this.scene.add(this.chasis);
     });
+
+    gltfLoader.setDRACOLoader(dracoLoader);
   }
 
   async processItems() {
