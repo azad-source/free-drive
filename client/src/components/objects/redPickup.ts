@@ -23,7 +23,7 @@ export class RedPickup {
     const gltfLoader = new GLTFLoader();
 
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath("libs/draco3dgltf");
+    dracoLoader.setDecoderPath("libs/draco3dgltf/");
     dracoLoader.preload();
 
     gltfLoader.load(gltfCar.href, (gltf) => {
