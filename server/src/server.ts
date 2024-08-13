@@ -9,7 +9,9 @@ const server = http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 });
 
-const io = geckos({ cors: { allowAuthorization: true, origin: "m-azad.ru" } });
+const io = geckos({
+  cors: { allowAuthorization: true, origin: "m-azad.ru:8080" },
+});
 
 io.addServer(server);
 
