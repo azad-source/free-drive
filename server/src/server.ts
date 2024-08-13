@@ -1,10 +1,19 @@
 import geckos from "@geckos.io/server";
+import http from "http";
 
 type IGame = Record<string, any>;
 
-const io = geckos({
-  cors: { allowAuthorization: true, origin: "http://m-azad.ru" },
+const server = http.createServer((req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 });
+
+server;
+
+const io = geckos();
+
+io.addServer(server);
 
 io.listen(8080);
 
