@@ -37,7 +37,7 @@ jobs:
 
       - name: Build server
         working-directory: server
-        run: yarn build
+        run: yarn tsc
 
       - name: Deploy to server and build
         uses: easingthemes/ssh-deploy@main
@@ -55,4 +55,4 @@ jobs:
             yarn install
             yarn build
             yarn start
-            pm2 restart server.cjs
+            pm2 restart server.js

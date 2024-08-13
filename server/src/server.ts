@@ -1,21 +1,28 @@
-import WebSocket, { WebSocketServer } from "ws";
+import geckos from "@geckos.io/server";
 
 type IGame = Record<string, any>;
 
-const server = new WebSocketServer({ port: 8080 });
+const io = geckos();
 
-const clients: Set<WebSocket> = new Set();
+io.listen(8080);
 
-server.on("connection", (ws: WebSocket) => {
-  clients.add(ws);
+const clients = new Set();
 
+io.onConnection((channel) => {
   const users: IGame = {};
 
-  ws.on("message", (message: string) => {
-    const gameState = JSON.parse(message);
+  console.log(`${channel.id} got connected`);
+
+  clients.add(channel);
+
+  channel.onDisconnect(() => {
+    console.log(`${channel.id} got disconnected`);
+  });
+
+  channel.on("chat message", (state) => {
+    const gameState = state as IGame;
 
     const userId = gameState?.id;
-
     if (userId) {
       if (gameState.isRemoved) {
         delete users[userId];
@@ -24,18 +31,6 @@ server.on("connection", (ws: WebSocket) => {
       }
     }
 
-    // Broadcast message to all clients
-    clients.forEach((client) => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(users));
-      }
-    });
-  });
-
-  ws.on("close", () => {
-    console.log("Client disconnected");
-    clients.delete(ws);
+    io.emit("chat message", users);
   });
 });
-
-console.log("WebSocket server is running on ws://localhost:8080");

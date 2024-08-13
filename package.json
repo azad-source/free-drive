@@ -10,7 +10,8 @@
     "install-all": "yarn workspace client install && yarn workspace server install",
     "build-server": "yarn workspace server build",
     "start-server": "yarn build-server && yarn workspace server start",
-    "build": "yarn workspace client build && yarn workspace server build",
+    "start-client": "yarn workspace client dev",
+    "build": "yarn workspace client build && yarn build-server",
     "start": "concurrently \"yarn workspace server start\" \"yarn workspace client dev\"",
     "dev": "yarn build-server && yarn start"
   },
