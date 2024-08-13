@@ -26,6 +26,8 @@ export class Root {
   player?: Player;
   orbit: OrbitControls;
   debug: typeof cannonDebugger.prototype;
+  lastSentTime = Date.now();
+  sendInterval = 50;
 
   constructor() {
     checkWebGlAvailability();
@@ -61,7 +63,7 @@ export class Root {
     const host = "ws://m-azad.ru:8080";
     const localhost = "ws://localhost:8080";
 
-    this.ws = new WebSocket(host);
+    this.ws = new WebSocket(localhost);
 
     this.ws.onopen = () => {
       console.log("Connected to WebSocket server");
@@ -101,8 +103,13 @@ export class Root {
   }
 
   sendGameState(gameState: any) {
-    if (this.ws.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify(gameState));
+    const currentTime = Date.now();
+
+    if (currentTime - this.lastSentTime > this.sendInterval) {
+      if (this.ws.readyState === WebSocket.OPEN) {
+        this.ws.send(JSON.stringify(gameState));
+      }
+      this.lastSentTime = currentTime;
     }
   }
 
