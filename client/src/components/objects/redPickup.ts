@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { GLTFLoader, GLTF, DRACOLoader } from "three/examples/jsm/Addons.js";
 
 const gltfCar = new URL("../../assets/models/car/scene.gltf", import.meta.url);
-const dracoLoaderUrl = new URL("../../libs/draco3dgltf/", import.meta.url);
+const dracoLoaderUrl = new URL("../../libs/draco/", import.meta.url);
 
 export class RedPickup {
   scene: THREE.Scene;
