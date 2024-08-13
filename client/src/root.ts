@@ -63,7 +63,7 @@ export class Root {
     const host = "ws://m-azad.ru:8080";
     const localhost = "ws://localhost:8080";
 
-    this.ws = new WebSocket(localhost);
+    this.ws = new WebSocket(host);
 
     this.ws.onopen = () => {
       console.log("Connected to WebSocket server");
