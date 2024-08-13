@@ -184,14 +184,14 @@ export class Car {
 
   removeCar() {
     const car = this;
-
     this.scene.remove(car.gltf.chasis);
-    // car.chassisMesh.geometry.dispose();
+
+    car.gltf.chasis.remove();
     car.vehicle.removeFromWorld(this.world);
     car.gltf.wheels.forEach((w) => {
       this.scene.remove(w);
-      // w.geometry.dispose();
-      // removeMaterial(w);
+      w.remove();
+      removeMaterial(w);
     });
 
     car.wheelBodies.forEach((w) => {
@@ -204,12 +204,12 @@ export class Car {
   }
 }
 
-function removeMaterial(mesh: THREE.Mesh) {
-  if (mesh.material) {
-    if (Array.isArray(mesh.material)) {
-      mesh.material.forEach((mat) => mat.dispose());
-    } else {
-      mesh.material.dispose();
-    }
-  }
+function removeMaterial(mesh: THREE.Object3D<THREE.Object3DEventMap>) {
+  // if (mesh?.material) {
+  //   if (Array.isArray(mesh?.material)) {
+  //     mesh?.material.forEach((mat) => mat.dispose());
+  //   } else {
+  //     mesh?.material.dispose();
+  //   }
+  // }
 }

@@ -1,3 +1,5 @@
+export type IGame = Record<string, IGameState>;
+
 export interface IGameState {
   id: string;
   x: number;

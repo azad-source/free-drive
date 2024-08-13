@@ -12,7 +12,7 @@ import { windowAutoResize } from "./components/windowResize";
 import { Player } from "./components/player";
 import { EntryForm } from "./components/form";
 import { VehicleControls } from "./components/controls";
-import { IGameState } from "./models/user.models";
+import { IGame } from "./models/user.models";
 
 export class Root {
   ws: WebSocket;
@@ -21,8 +21,8 @@ export class Root {
   renderer: THREE.WebGLRenderer;
   world: CANNON.World;
   ground: Ground;
-  cars: Car[] = [];
-  users: IGameState[] = [];
+  cars: Record<string, Car> = {};
+  users: IGame;
   player?: Player;
   orbit: OrbitControls;
   debug: typeof cannonDebugger.prototype;
@@ -44,7 +44,7 @@ export class Root {
     this.initWorld();
     this.initWebSocket();
 
-    new EntryForm((userId: string) => {
+    new EntryForm(() => {
       if (this.player?.car) {
         this.player.car.setState({ ...this.player.car.state, isRemoved: true });
       }
@@ -58,7 +58,10 @@ export class Root {
   }
 
   initWebSocket() {
-    this.ws = new WebSocket("ws://m-azad.ru:8080");
+    const host = "ws://m-azad.ru:8080";
+    const localhost = "ws://localhost:8080";
+
+    this.ws = new WebSocket(host);
 
     this.ws.onopen = () => {
       console.log("Connected to WebSocket server");
@@ -68,36 +71,33 @@ export class Root {
       const data = JSON.parse(event.data);
       this.users = data;
 
-      const userIds = this.users.map((i) => i.id);
-      const carsIds = this.cars.map((i) => i.state.id);
+      for (const userId in this.users) {
+        const state = this.users[userId];
 
-      this.users.forEach((state) => {
-        if (state.id) {
-          const carIndex = carsIds.findIndex((c) => c === state.id);
-
-          if (carIndex !== -1) {
-            this.cars[carIndex].setState(state);
-          } else {
-            const car = new Car(this.scene, this.world, state);
-            this.cars.push(car);
-          }
+        if (userId in this.cars) {
+          this.cars[userId].setState(state);
+        } else {
+          const car = new Car(this.scene, this.world, state);
+          this.cars[userId] = car;
         }
-      });
-
-      const removedCarIndex = this.cars.findIndex(
-        (c) => !userIds.includes(c.state.id)
-      );
-
-      if (removedCarIndex !== -1) {
-        const car = this.cars[removedCarIndex];
-        car.removeCar();
-        this.cars.splice(removedCarIndex, 1);
       }
+
+      this.clearUnusedData();
     };
 
     this.ws.onclose = () => {
       console.log("Disconnected from WebSocket server");
     };
+  }
+
+  clearUnusedData() {
+    Object.keys(this.cars).forEach((key) => {
+      if (!Object.keys(this.users).includes(key)) {
+        const car = this.cars[key];
+        car.removeCar();
+        delete this.cars[key];
+      }
+    });
   }
 
   sendGameState(gameState: any) {
@@ -135,9 +135,9 @@ export class Root {
   updateFrame() {
     this.world.step(1 / 60);
 
-    this.cars.forEach((car) => {
-      car.updateFrame();
-    });
+    for (const car in this.cars) {
+      this.cars[car].updateFrame();
+    }
 
     this.player?.car?.updateFrame();
 

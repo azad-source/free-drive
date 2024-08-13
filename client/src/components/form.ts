@@ -1,16 +1,14 @@
 import { generateUUID } from "three/src/math/MathUtils.js";
 import { sessionFields } from "../config/user.config";
-import { Player } from "./player";
-import { IGameState } from "../models/user.models";
 
 export class EntryForm {
   form: HTMLFormElement;
 
-  constructor(callback: (userId: string) => void) {
+  constructor(userDelete: (userId: string) => void) {
     if (!sessionStorage.getItem(sessionFields.playerId)) {
       this.init();
     } else {
-      this.deleteUserButton(callback);
+      this.deleteUserButton(userDelete);
     }
   }
 

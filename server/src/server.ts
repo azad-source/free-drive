@@ -1,35 +1,33 @@
 import WebSocket, { WebSocketServer } from "ws";
 
+type IGame = Record<string, any>;
+
 const server = new WebSocketServer({ port: 8080 });
 
 const clients: Set<WebSocket> = new Set();
 
 server.on("connection", (ws: WebSocket) => {
-  console.log("New client connected");
   clients.add(ws);
-  let users: any[] = [];
+
+  const users: IGame = {};
 
   ws.on("message", (message: string) => {
-    console.log(`Received message: ${message}`);
+    const gameState = JSON.parse(message);
 
-    const gameState: any = JSON.parse(message);
+    const userId = gameState?.id;
 
-    if (gameState.id) {
-      if (users.every((i) => i.id !== gameState.id)) {
-        users.push(gameState);
+    if (userId) {
+      if (gameState.isRemoved) {
+        delete users[userId];
       } else {
-        users.forEach((state, index) => {
-          if (state.id === gameState.id) {
-            users.splice(index, 1, gameState);
-          }
-        });
+        users[userId] = gameState;
       }
     }
 
     // Broadcast message to all clients
     clients.forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(users.filter((u) => !u.isRemoved)));
+        client.send(JSON.stringify(users));
       }
     });
   });
