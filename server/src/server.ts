@@ -3,22 +3,15 @@ import http from "http";
 
 type IGame = Record<string, any>;
 
+const origin = "http://m-azad.ru";
+
 const server = http.createServer((req, res) => {
-  // const origin1 = req.headers.origin;
-  const origin2 = "http://m-azad.ru";
-  res.setHeader("Access-Control-Allow-Origin", origin2);
-  // res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  // res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  // if (req.method === "OPTIONS") {
-  //   res.writeHead(204);
-  //   res.end();
-  //   return;
-  // }
+  res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 });
 
-const io = geckos({
-  // cors: { allowAuthorization: true, origin: "http://m-azad.ru:80" },
-});
+const io = geckos({ cors: { origin } });
 
 io.addServer(server);
 
