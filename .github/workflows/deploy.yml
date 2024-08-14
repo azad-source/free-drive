@@ -31,16 +31,20 @@ jobs:
         working-directory: client
         run: yarn build
 
+      - name: Build server
+        working-directory: server
+        run: yarn build
+
       - name: Deploy to server and build
         uses: easingthemes/ssh-deploy@main
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: "-rlgoDzvc -i --delete"
-          SOURCE: "client/dist/"
+          SOURCE: "client/dist/ dist/"
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.SSH_USER }}
           TARGET: ${{ secrets.WORK_DIR }}
-          EXCLUDE: "/client/dist/, /node_modules/"
+          EXCLUDE: "/client/dist/, '/dist/' /node_modules/"
           SCRIPT_AFTER: cd ${{ secrets.WORK_DIR }}
             git checkout ${{ secrets.MAIN_BRANCH }}
             git pull
