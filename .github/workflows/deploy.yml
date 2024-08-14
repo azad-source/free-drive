@@ -55,4 +55,4 @@ jobs:
             yarn install
             yarn build
             yarn start
-            pm2 restart server.js
+            pm2 restart server
