@@ -36,15 +36,9 @@ jobs:
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: "-rlgoDzvc -i --delete"
-          # SOURCE: "*"
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.SSH_USER }}
           TARGET: ${{ secrets.WORK_DIR }}
           EXCLUDE: "/node_modules/"
           SCRIPT_AFTER: cd ${{ secrets.WORK_DIR }}
-            git checkout ${{ secrets.MAIN_BRANCH }}
-            git pull
             yarn install
-            yarn build
-            pm2 stop server.js
-            pm2 start server.js
