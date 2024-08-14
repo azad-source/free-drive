@@ -11,7 +11,7 @@ const server = http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 });
 
-const io = geckos({ cors: { origin } });
+const io = geckos({ cors: { origin }, portRange: { min: 8080, max: 8080 } });
 
 io.addServer(server);
 
