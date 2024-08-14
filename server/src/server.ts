@@ -19,7 +19,7 @@ const server = http.createServer((req, res) => {
 });
 
 const io = geckos({
-  // cors: { allowAuthorization: true, origin: "m-azad.ru" },
+  cors: { allowAuthorization: true, origin: "http://m-azad.ru:80" },
 });
 
 io.addServer(server);
