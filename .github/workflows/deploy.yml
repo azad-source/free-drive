@@ -25,13 +25,10 @@ jobs:
 
       - name: Install dependencies for client
         working-directory: client
-        run: yarn install
+        run: yarn install && yarn build
 
       - name: Build client
         working-directory: client
-        run: yarn build
-
-      - name: Build server
         run: yarn build
 
       - name: Deploy to server and build
@@ -39,7 +36,7 @@ jobs:
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: "-rlgoDzvc -i --delete"
-          SOURCE: "client/dist/ dist/"
+          SOURCE: "client/dist/ dist/ node_modules/"
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.SSH_USER }}
           TARGET: ${{ secrets.WORK_DIR }}
