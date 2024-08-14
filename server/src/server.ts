@@ -5,8 +5,8 @@ type IGame = Record<string, any>;
 
 const server = http.createServer((req, res) => {
   // const origin1 = req.headers.origin;
-  // const origin2 = "http://m-azad.ru";
-  // res.setHeader("Access-Control-Allow-Origin", origin2);
+  const origin2 = "http://m-azad.ru";
+  res.setHeader("Access-Control-Allow-Origin", origin2);
   // res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   // res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   // if (req.method === "OPTIONS") {
