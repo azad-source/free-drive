@@ -3,7 +3,7 @@ import geckos from "@geckos.io/server";
 
 type IGame = Record<string, any>;
 
-const origin = "http://m-azad.ru";
+const origin = "m-azad.ru";
 
 // const server = createServer((req, res) => {
 //   res.setHeader("Access-Control-Allow-Origin", req.headers.origin || origin);
@@ -15,7 +15,7 @@ const io = geckos({ cors: { origin, allowAuthorization: true } });
 
 // io.addServer(server);
 
-io.listen(80);
+io.listen(8080);
 
 const clients = new Set();
 
