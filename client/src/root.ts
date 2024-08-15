@@ -61,7 +61,7 @@ export class Root {
     const host = "http://m-azad.ru";
     const localhost = "ws://localhost:8080";
 
-    this.channel = geckos({ port: 80 });
+    this.channel = geckos({ port: 8080 });
 
     this.channel.onConnect((error) => {
       if (error) {
