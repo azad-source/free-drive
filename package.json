@@ -13,7 +13,7 @@
     "scripts": {
         "install-all": "yarn install && yarn workspace client install",
         "build-server": "node esbuild.config.js",
-        "start-server": "yarn build-server && node dist/server.js",
+        "start-server": "node dist/server.js",
         "start-client": "yarn workspace client dev",
         "build": "yarn workspace client build && yarn build-server",
         "start": "concurrently \"yarn start-server\" \"yarn workspace client dev\"",

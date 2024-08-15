@@ -23,13 +23,13 @@ jobs:
       - name: Set corepack enable
         run: corepack enable
 
-      - name: Install dependencies for client
-        working-directory: client
-        run: yarn install && yarn build
+      # - name: Install dependencies for client
+      #   working-directory: client
+      #   run: yarn install && yarn build
 
-      - name: Build client
-        working-directory: client
-        run: yarn build
+      # - name: Build client
+      #   working-directory: client
+      #   run: yarn build
 
       - name: Deploy to server and build
         uses: easingthemes/ssh-deploy@main
@@ -38,7 +38,9 @@ jobs:
           ARGS: "-rlgoDzvc -i --delete"
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.SSH_USER }}
-          TARGET: ${{ secrets.WORK_DIR }}
-          EXCLUDE: "/node_modules/"
-          SCRIPT_AFTER: cd ${{ secrets.WORK_DIR }}
+          TARGET: ${{ secrets.SERVER_DIR }}
+          # EXCLUDE: "/node_modules/"
+          SCRIPT_AFTER: cd ${{ secrets.SERVER_DIR }}
             yarn install
+            pm2 start yarn --interpreter bash --name api -- build
+            pm2 start yarn --interpreter bash --name api -- start-server
