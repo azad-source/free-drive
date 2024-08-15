@@ -11,7 +11,7 @@ const origin = "http://m-azad.ru";
 //   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 // });
 
-const io = geckos({ cors: { origin: (req) => req.headers.origin || origin } });
+const io = geckos({ cors: { origin } });
 
 // io.addServer(server);
 
