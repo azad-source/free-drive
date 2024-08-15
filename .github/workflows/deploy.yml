@@ -39,7 +39,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.SSH_USER }}
           TARGET: ${{ secrets.SERVER_DIR }}
-          # EXCLUDE: "/node_modules/"
+          EXCLUDE: ".git"
           SCRIPT_AFTER: cd ${{ secrets.SERVER_DIR }}
             yarn install
             pm2 start yarn --interpreter bash --name api -- build
