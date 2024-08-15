@@ -15,7 +15,7 @@ const io = geckos({ cors: { origin, allowAuthorization: true } });
 
 // io.addServer(server);
 
-io.listen(8080);
+io.listen(80);
 
 const clients = new Set();
 
