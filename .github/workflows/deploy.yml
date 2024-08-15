@@ -23,9 +23,8 @@ jobs:
       - name: Set corepack enable
         run: corepack enable
 
-      # - name: Install dependencies for client
-      #   working-directory: client
-      #   run: yarn install && yarn build
+      - name: Install dependencies and build
+        run: yarn install && yarn build
 
       # - name: Build client
       #   working-directory: client
@@ -40,7 +39,3 @@ jobs:
           REMOTE_USER: ${{ secrets.SSH_USER }}
           TARGET: ${{ secrets.SERVER_DIR }}
           EXCLUDE: ".git, .github"
-          SCRIPT_AFTER: cd ${{ secrets.SERVER_DIR }}
-            yarn install
-            yarn build
-            pm2 start dist/server.js

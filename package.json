@@ -12,26 +12,21 @@
     },
     "scripts": {
         "install-all": "yarn install && yarn workspace client install",
-        "build-server": "node esbuild.config.js",
-        "start-server": "node dist/server.js",
+        "build-server": "tsc",
+        "start-server": "yarn build-server && node dist/server.js",
         "start-client": "yarn workspace client dev",
         "build": "yarn workspace client build && yarn build-server",
         "start": "concurrently \"yarn start-server\" \"yarn workspace client dev\"",
         "dev": "yarn build-server && yarn start"
     },
     "devDependencies": {
-        "@types/cors": "^2",
         "@types/node": "^22.2.0",
-        "esbuild": "^0.23.0",
-        "esbuild-node-externals": "^1.14.0",
         "typescript": "^5.5.3"
     },
     "packageManager": "yarn@4.4.0",
     "dependencies": {
         "@geckos.io/server": "^3.0.0",
         "concurrently": "^8.2.2",
-        "cors": "^2.8.5",
-        "dotenv": "^16.4.5",
-        "http": "^0.0.1-security"
+        "dotenv": "^16.4.5"
     }
 }
