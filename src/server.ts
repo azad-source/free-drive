@@ -1,21 +1,21 @@
 import geckos from "@geckos.io/server";
-// import { createServer } from "http";
+import http from "http";
 
 type IGame = Record<string, any>;
 
-const origin = "m-azad.ru";
+const origin = "http://m-azad.ru";
 
-// const server = createServer((req, res) => {
-//   res.setHeader("Access-Control-Allow-Origin", req.headers.origin || origin);
-//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-// });
+const server = http.createServer((req, res) => {
+  // res.setHeader("Access-Control-Allow-Origin", req.headers.origin || origin);
+  // res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  // res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+});
 
 const io = geckos({ cors: { origin, allowAuthorization: true } });
 
-// io.addServer(server);
+io.addServer(server);
 
-io.listen(8080);
+server.listen(9208);
 
 const clients = new Set();
 
