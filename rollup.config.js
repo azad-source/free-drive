@@ -17,4 +17,5 @@ export default {
     json(), // Поддержка импорта JSON файлов
     terser(), // Минификация кода
   ],
+  external: ["../build/Release/node_datachannel.node"],
 };
