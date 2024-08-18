@@ -7,8 +7,8 @@ import typescript from "@rollup/plugin-typescript";
 export default {
   input: "src/server.ts",
   output: {
-    file: "dist/server.cjs",
-    format: "cjs",
+    file: "dist/server.js",
+    format: "es",
   },
   plugins: [
     typescript(),
