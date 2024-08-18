@@ -39,3 +39,5 @@ jobs:
           REMOTE_USER: ${{ secrets.SSH_USER }}
           TARGET: ${{ secrets.SERVER_DIR }}
           EXCLUDE: ".git, .github, node_modules/"
+      - name: Install dependencies and build
+        run: yarn install
