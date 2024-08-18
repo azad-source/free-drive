@@ -8,7 +8,7 @@ export default {
   input: "src/server.ts",
   output: {
     file: "dist/server.js",
-    format: "esm",
+    format: "cjs",
   },
   plugins: [
     typescript(),
