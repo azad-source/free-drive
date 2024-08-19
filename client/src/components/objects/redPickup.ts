@@ -7,10 +7,6 @@ const dracoLoaderUrl = new URL("../../libs/draco/", import.meta.url);
 export class RedPickup {
   scene: THREE.Scene;
   model: GLTF["scene"];
-  wheel1: THREE.Object3D;
-  wheel2: THREE.Object3D;
-  wheel3: THREE.Object3D;
-  wheel4: THREE.Object3D;
   chasis: THREE.Object3D;
   wheels: THREE.Object3D[] = [];
   models: THREE.Object3D<THREE.Object3DEventMap>[] = [];
@@ -67,21 +63,21 @@ export class RedPickup {
     gltfLoader.setDRACOLoader(dracoLoader);
   }
 
-  async processItems() {
-    for (const item of this.models) {
-      await this.doAsyncWork(item); // Ожидание завершения асинхронной работы
-    }
-  }
+  // async processItems() {
+  //   for (const item of this.models) {
+  //     await this.doAsyncWork(item); // Ожидание завершения асинхронной работы
+  //   }
+  // }
 
-  async doAsyncWork(item: THREE.Object3D<THREE.Object3DEventMap>) {
-    return new Promise((resolve) => {
-      this.scene.add(item);
-      alert(item.name);
+  // async doAsyncWork(item: THREE.Object3D<THREE.Object3DEventMap>) {
+  //   return new Promise((resolve) => {
+  //     this.scene.add(item);
+  //     alert(item.name);
 
-      setTimeout(() => {
-        this.scene.remove(item);
-        resolve(0);
-      }, 1000);
-    });
-  }
+  //     setTimeout(() => {
+  //       this.scene.remove(item);
+  //       resolve(0);
+  //     }, 1000);
+  //   });
+  // }
 }
