@@ -10,7 +10,10 @@ export default defineConfig(({ mode }) => {
     plugins: [
       viteTsconfigPaths(),
       viteStaticCopy({
-        targets: [{ src: "src/assets/models/car/*", dest: "assets" }],
+        targets: [
+          { src: "src/assets/models/car/*", dest: "assets" },
+          { src: "src/libs/*", dest: "libs" },
+        ],
       }),
     ],
     server: {
