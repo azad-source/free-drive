@@ -6,25 +6,27 @@ import { getRenderer } from "./components/renderer";
 import { checkWebGlAvailability } from "./components/detectWebGL";
 import cannonDebugger from "cannon-es-debugger";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
-import { Car } from "./components/car";
 import { Ground } from "./components/ground";
 import { windowAutoResize } from "./components/windowResize";
 import { Player } from "./components/player";
 import { EntryForm } from "./components/form";
-import { VehicleControls } from "./components/controls";
 import { IGame } from "./models/user.models";
 import geckos, { ClientChannel } from "@geckos.io/client";
+import { Users } from "components/users";
 
 export class Root {
   channel: ClientChannel;
-  scene: THREE.Scene;
-  playerCamera: PlayerCamera;
-  renderer: THREE.WebGLRenderer;
+  scene: THREE.Scene = getScene();
+  playerCamera: PlayerCamera = new PlayerCamera(this.scene);
+  renderer: THREE.WebGLRenderer = getRenderer();
   world: CANNON.World;
   ground: Ground;
-  cars: Record<string, Car> = {};
+  users: Users;
   player?: Player;
-  orbit: OrbitControls;
+  orbit: OrbitControls = new OrbitControls(
+    this.playerCamera.camera,
+    this.renderer.domElement
+  );
   debug: typeof cannonDebugger.prototype;
 
   constructor() {
@@ -33,15 +35,9 @@ export class Root {
   }
 
   init() {
-    this.scene = getScene();
-    this.playerCamera = new PlayerCamera(this.scene);
-    this.renderer = getRenderer();
-    this.orbit = new OrbitControls(
-      this.playerCamera.camera,
-      this.renderer.domElement
-    );
     this.orbit.update();
     this.initWorld();
+    this.users = new Users(this.scene, this.world);
     this.initWebSocket();
 
     new EntryForm(() => {
@@ -49,18 +45,15 @@ export class Root {
         this.player.car.setState({ ...this.player.car.state, isRemoved: true });
       }
     });
-    this.player = new Player();
+    this.player = new Player(this.scene, this.world, this.playerCamera);
 
     if (this.player.isExist()) {
-      this.initPlayerCar();
+      this.player.initCar();
       windowAutoResize(this.playerCamera.camera, this.renderer);
     }
   }
 
   initWebSocket() {
-    const host = "http://m-azad.ru";
-    const localhost = "ws://localhost:8080";
-
     this.channel = geckos({ port: 9208 });
 
     this.channel.onConnect((error) => {
@@ -70,33 +63,10 @@ export class Root {
       }
 
       this.channel.on("chat message", (data: IGame) => {
-        delete data[this.player.id];
-
-        for (const userId in data) {
-          const state = data[userId];
-
-          if (userId in this.cars) {
-            this.cars[userId].setState(state);
-          } else {
-            const car = new Car(this.scene, this.world, state);
-            this.cars[userId] = car;
-          }
-        }
-
-        // this.clearUnusedData();
+        this.users.update(data, this.player);
       });
     });
   }
-
-  // clearUnusedData() {
-  //   Object.keys(this.cars).forEach((key) => {
-  //     if (!Object.keys(this.users).includes(key)) {
-  //       const car = this.cars[key];
-  //       car.removeCar();
-  //       delete this.cars[key];
-  //     }
-  //   });
-  // }
 
   sendGameState(gameState: any) {
     this.channel.emit("chat message", gameState);
@@ -112,15 +82,6 @@ export class Root {
     this.animate();
   }
 
-  initPlayerCar() {
-    if (this.player) {
-      this.player.defineCar(new Car(this.scene, this.world));
-      if (this.player.car) {
-        new VehicleControls(this.player.car.vehicle);
-      }
-    }
-  }
-
   animate() {
     requestAnimationFrame(() => {
       this.animate();
@@ -130,15 +91,10 @@ export class Root {
 
   updateFrame() {
     this.world.step(1 / 60);
-
-    for (const id in this.cars) {
-      this.cars[id].updateFrame();
-    }
-
-    this.player?.car?.updateFrame();
+    this.users?.updateFrame();
+    this.player?.updateFrame();
 
     if (this.player?.car) {
-      this.playerCamera.updateCamera(this.player.car);
       this.sendGameState(this.player.car.state);
     }
 

@@ -10,6 +10,7 @@ import { groundOptions } from "../config/ground.config";
 import { IGameState } from "../models/user.models";
 import { sessionFields } from "../config/user.config";
 import { RedPickup } from "./objects/redPickup";
+import { VehicleControls } from "./controls";
 
 const wheelXOffset = 0.3; // вынос колес
 const fWheelPos = 1.65;
@@ -136,6 +137,10 @@ export class Car {
       { friction: 0.3, restitution: 0, contactEquationStiffness: 1000 }
     );
     this.world.addContactMaterial(wheelGroundContactMaterial);
+  }
+
+  initControls() {
+    new VehicleControls(this.vehicle);
   }
 
   updateFrame() {
