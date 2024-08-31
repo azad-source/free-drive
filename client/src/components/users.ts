@@ -23,7 +23,7 @@ export class Users {
       if (userId in this.cars) {
         this.cars[userId].setState(state);
       } else {
-        const car = new Car(this.scene, this.world, state);
+        const car = new Car(this.scene, this.world, false, state);
         this.cars[userId] = car;
       }
     }

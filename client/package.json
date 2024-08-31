@@ -24,7 +24,8 @@
     "cannon-es-debugger": "^1.0.0",
     "dat.gui": "^0.7.9",
     "nipplejs": "^0.10.2",
-    "three": "^0.166.1"
+    "three": "^0.166.1",
+    "three-to-cannon": "^5.0.1"
   },
   "packageManager": "yarn@4.4.0"
 }

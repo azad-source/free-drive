@@ -29,8 +29,7 @@ export class Player {
   }
 
   initCar() {
-    this.car = new Car(this.scene, this.world);
-    this.car.initControls();
+    this.car = new Car(this.scene, this.world, true);
   }
 
   removeCar() {

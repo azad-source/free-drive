@@ -8,8 +8,8 @@ const near = 0.1; // the near clipping plane
 const far = 1000; // the far clipping plane
 
 export const defaultCameraPosition = {
-  x: 25,
-  y: 15,
+  x: 7,
+  y: 4,
   z: 0,
 };
 
@@ -39,7 +39,7 @@ export class PlayerCamera {
   updateCamera(car: Car) {
     this.camera.position.lerp(
       this.followCam.getWorldPosition(new THREE.Vector3()),
-      0.05
+      0.04
     );
 
     const target = car?.gltf?.chasis;

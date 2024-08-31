@@ -7,60 +7,58 @@ const dracoLoaderUrl = new URL("../../libs/draco/", import.meta.url);
 export class RedPickup {
   scene: THREE.Scene;
   model: GLTF["scene"];
-  chasis: THREE.Object3D;
-  wheels: THREE.Object3D[] = [];
+  chasis: THREE.Mesh;
+  wheels: THREE.Mesh[] = [];
   models: THREE.Object3D<THREE.Object3DEventMap>[] = [];
 
   constructor(scene: THREE.Scene) {
     this.scene = scene;
-    this.init();
   }
 
-  init() {
-    const gltfLoader = new GLTFLoader();
+  async init(): Promise<RedPickup> {
+    return new Promise((resolve) => {
+      const gltfLoader = new GLTFLoader();
 
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath(dracoLoaderUrl.href);
-    dracoLoader.preload();
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath(dracoLoaderUrl.href);
+      dracoLoader.preload();
 
-    gltfLoader.load(gltfCar.href, (gltf) => {
-      this.model = gltf.scene;
+      gltfLoader.load(gltfCar.href, (gltf) => {
+        this.model = gltf.scene;
 
-      // this.model.traverse((node) => {
-      //   if (node.name.toLowerCase().includes("object_30")) {
-      //     node.position.set(0, 1, 0);
-      //     this.models.push(node);
-      //   }
-      // });
+        // this.model.traverse((node) => {
+        //   if (node.name.toLowerCase().includes("object_30")) {
+        //     node.position.set(0, 1, 0);
+        //     this.models.push(node);
+        //   }
+        // });
 
-      // this.processItems();
+        // this.processItems();
 
-      this.wheels.push(
-        this.model.getObjectByName("RFwheel_3"),
-        this.model.getObjectByName("LFwheel_1"),
-        this.model.getObjectByName("RRwheel_8"),
-        this.model.getObjectByName("LRwheel_6")
-      );
+        this.wheels.push(
+          this.model.getObjectByName("RFwheel_3") as THREE.Mesh,
+          this.model.getObjectByName("LFwheel_1") as THREE.Mesh,
+          this.model.getObjectByName("RRwheel_8") as THREE.Mesh,
+          this.model.getObjectByName("LRwheel_6") as THREE.Mesh
+        );
 
-      const wheelScale = 2.4;
-      const chasisScale = 2.5;
+        this.wheels.forEach((w) => {
+          // if (w?.material?.wireframe) {
+          //   w.material.wireframe = true;
+          // }
 
-      this.wheels.forEach((w) => {
-        w.scale.set(wheelScale, wheelScale, wheelScale);
-        // if (w?.material?.wireframe) {
-        //   w.material.wireframe = true;
-        // }
+          this.scene.add(w);
+        });
 
-        this.scene.add(w);
+        this.chasis = this.model.getObjectByName("Object_30") as THREE.Mesh;
+        // this.chasis.material.wireframe = true;
+        this.scene.add(this.chasis);
+
+        resolve(this);
       });
 
-      this.chasis = this.model.getObjectByName("Object_30");
-      this.chasis.scale.set(chasisScale, chasisScale, chasisScale);
-      // this.chasis.material.wireframe = true;
-      this.scene.add(this.chasis);
+      gltfLoader.setDRACOLoader(dracoLoader);
     });
-
-    gltfLoader.setDRACOLoader(dracoLoader);
   }
 
   // async processItems() {
