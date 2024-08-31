@@ -11,7 +11,11 @@ const server = http.createServer((req, res) => {
   // res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 });
 
-const io = geckos({ cors: { origin, allowAuthorization: true }, iceServers });
+const io = geckos({
+  cors: { origin, allowAuthorization: true },
+  iceServers,
+  maxPacketLifeTime: 2,
+});
 
 io.addServer(server);
 
