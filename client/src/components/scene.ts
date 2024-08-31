@@ -18,7 +18,7 @@ export function getScene() {
 
   scene.background = new THREE.Color(0xa0a0a0);
   scene.add(
-    axes, // X - red, Y - green, Z - blue.
+    // axes, // X - red, Y - green, Z - blue.
     // grid,
     dLight,
     ambLight

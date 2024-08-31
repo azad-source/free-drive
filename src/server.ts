@@ -1,4 +1,4 @@
-import geckos from "@geckos.io/server";
+import geckos, { iceServers } from "@geckos.io/server";
 import http from "http";
 
 type IGame = Record<string, any>;
@@ -11,7 +11,7 @@ const server = http.createServer((req, res) => {
   // res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 });
 
-const io = geckos({ cors: { origin, allowAuthorization: true } });
+const io = geckos({ cors: { origin, allowAuthorization: true }, iceServers });
 
 io.addServer(server);
 
