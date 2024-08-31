@@ -14,7 +14,7 @@ const server = http.createServer((req, res) => {
 const io = geckos({
   cors: { origin, allowAuthorization: true },
   iceServers,
-  maxPacketLifeTime: 150,
+  maxPacketLifeTime: 1500,
 });
 
 io.addServer(server);
