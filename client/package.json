@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@types/dat.gui": "^0.7.13",
+    "@types/pako": "^2",
     "@types/three": "^0.166.0",
     "typescript": "^5.5.3",
     "vite": "^5.3.4",
@@ -24,6 +25,7 @@
     "cannon-es-debugger": "^1.0.0",
     "dat.gui": "^0.7.9",
     "nipplejs": "^0.10.2",
+    "pako": "^2.1.0",
     "three": "^0.166.1",
     "three-to-cannon": "^5.0.1"
   },

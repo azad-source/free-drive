@@ -1,5 +1,6 @@
 import geckos, { iceServers } from "@geckos.io/server";
 import http from "http";
+import pako from "pako";
 
 type IGame = Record<string, any>;
 
@@ -51,9 +52,8 @@ io.onConnection((channel) => {
     console.log(`${channel.id} got disconnected`);
   });
 
-  channel.on(MSG, (state) => {
-    const gameState = state as IGame;
-
+  channel.on(MSG, (res: Uint8Array) => {
+    const gameState: IGame = JSON.parse(pako.ungzip(res, { to: "string" }));
     const userId = gameState?.id;
     if (userId) {
       if (gameState.isRemoved) {
@@ -63,6 +63,7 @@ io.onConnection((channel) => {
       }
     }
 
-    io.emit(MSG, users);
+    const unit8Array: Uint8Array = pako.gzip(JSON.stringify(users));
+    io.emit(MSG, unit8Array);
   });
 });

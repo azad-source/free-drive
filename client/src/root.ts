@@ -13,6 +13,7 @@ import { EntryForm } from "./components/form";
 import { IGame, IGameState } from "./models/user.models";
 import geckos, { ClientChannel } from "@geckos.io/client";
 import { Users } from "components/users";
+import pako from "pako";
 
 const MSG = "msg";
 
@@ -64,14 +65,18 @@ export class Root {
         return;
       }
 
-      this.channel.on(MSG, (data: IGame) => {
+      this.channel.on(MSG, (unit8Array: Uint8Array) => {
+        const data: IGame = JSON.parse(
+          pako.ungzip(unit8Array, { to: "string" })
+        );
         this.users.update(data, this.player);
       });
     });
   }
 
   sendGameState(gameState: IGameState) {
-    this.channel.emit(MSG, gameState);
+    const unit8Array: Uint8Array = pako.gzip(JSON.stringify(gameState));
+    this.channel.emit(MSG, unit8Array);
   }
 
   initWorld() {
