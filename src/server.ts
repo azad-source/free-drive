@@ -5,6 +5,7 @@ type IGame = Record<string, any>;
 
 const origin = "http://m-azad.ru";
 const port = 9208;
+const MSG = "msg";
 
 const server = http.createServer((req, res) => {
   // res.setHeader("Access-Control-Allow-Origin", req.headers.origin || origin);
@@ -50,7 +51,7 @@ io.onConnection((channel) => {
     console.log(`${channel.id} got disconnected`);
   });
 
-  channel.on("chat message", (state) => {
+  channel.on(MSG, (state) => {
     const gameState = state as IGame;
 
     const userId = gameState?.id;
@@ -62,6 +63,6 @@ io.onConnection((channel) => {
       }
     }
 
-    io.emit("chat message", users);
+    io.emit(MSG, users);
   });
 });

@@ -14,6 +14,8 @@ import { IGame, IGameState } from "./models/user.models";
 import geckos, { ClientChannel } from "@geckos.io/client";
 import { Users } from "components/users";
 
+const MSG = "msg";
+
 export class Root {
   channel: ClientChannel;
   scene: THREE.Scene = getScene();
@@ -62,14 +64,14 @@ export class Root {
         return;
       }
 
-      this.channel.on("chat message", (data: IGame) => {
+      this.channel.on(MSG, (data: IGame) => {
         this.users.update(data, this.player);
       });
     });
   }
 
   sendGameState(gameState: IGameState) {
-    this.channel.emit("chat message", gameState);
+    this.channel.emit(MSG, gameState);
   }
 
   initWorld() {
