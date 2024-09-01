@@ -4,6 +4,7 @@ import http from "http";
 type IGame = Record<string, any>;
 
 const origin = "http://m-azad.ru";
+const port = 9208;
 
 const server = http.createServer((req, res) => {
   // res.setHeader("Access-Control-Allow-Origin", req.headers.origin || origin);
@@ -18,7 +19,23 @@ const io = geckos({
 
 io.addServer(server);
 
-server.listen(9208);
+server.listen(port);
+
+server.on("connection", () => {
+  console.log(`connection ...`);
+});
+
+server.on("connect", () => {
+  console.log(`connect ...`);
+});
+
+server.on("close", () => {
+  console.log(`connection closed`);
+});
+
+server.on("listening", () => {
+  console.log(`listening on port ${port}`);
+});
 
 const clients = new Set();
 

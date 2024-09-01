@@ -10,7 +10,7 @@ import { Ground } from "./components/ground";
 import { windowAutoResize } from "./components/windowResize";
 import { Player } from "./components/player";
 import { EntryForm } from "./components/form";
-import { IGame } from "./models/user.models";
+import { IGame, IGameState } from "./models/user.models";
 import geckos, { ClientChannel } from "@geckos.io/client";
 import { Users } from "components/users";
 
@@ -68,7 +68,7 @@ export class Root {
     });
   }
 
-  sendGameState(gameState: any) {
+  sendGameState(gameState: IGameState) {
     this.channel.emit("chat message", gameState);
   }
 
